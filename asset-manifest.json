@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/holiday-planner/static/css/main.ac2c9fd1.css",
-    "main.js": "/holiday-planner/static/js/main.7615ecb2.js",
+    "main.css": "/holiday-planner/static/css/main.e5cdda46.css",
+    "main.js": "/holiday-planner/static/js/main.0012a018.js",
     "static/js/453.a6d9cdac.chunk.js": "/holiday-planner/static/js/453.a6d9cdac.chunk.js",
     "index.html": "/holiday-planner/index.html",
-    "main.ac2c9fd1.css.map": "/holiday-planner/static/css/main.ac2c9fd1.css.map",
-    "main.7615ecb2.js.map": "/holiday-planner/static/js/main.7615ecb2.js.map",
+    "main.e5cdda46.css.map": "/holiday-planner/static/css/main.e5cdda46.css.map",
+    "main.0012a018.js.map": "/holiday-planner/static/js/main.0012a018.js.map",
     "453.a6d9cdac.chunk.js.map": "/holiday-planner/static/js/453.a6d9cdac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ac2c9fd1.css",
-    "static/js/main.7615ecb2.js"
+    "static/css/main.e5cdda46.css",
+    "static/js/main.0012a018.js"
   ]
 }
