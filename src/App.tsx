@@ -115,14 +115,34 @@ function App() {
   }, [leaveState]);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ background: '#fff', padding: '0 50px' }}>
-        <Title level={2} style={{ margin: '16px 0' }}>Holiday Planner</Title>
+    <Layout style={{ minHeight: '100vh', width: '100%', maxWidth: '100vw', overflow: 'hidden' }}>
+      <Header style={{ 
+        background: '#fff', 
+        padding: '0 16px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1,
+        width: '100%',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <Title level={2} style={{ margin: '12px 0' }}>Holiday Planner</Title>
       </Header>
-      <Content style={{ padding: '0 50px' }}>
-        <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+      <Content style={{ 
+        padding: '16px',
+        width: '100%',
+        maxWidth: '100vw',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          background: '#fff', 
+          padding: '16px',
+          minHeight: 'calc(100vh - 64px)',
+          width: '100%',
+          maxWidth: '100%',
+          overflow: 'hidden'
+        }}>
           <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <Card>
+            <Card bodyStyle={{ padding: '16px' }}>
               <LeaveControls
                 selectedDivision={selectedDivision}
                 selectedYear={selectedYear}

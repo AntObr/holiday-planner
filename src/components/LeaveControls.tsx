@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Select, InputNumber, Button, Modal, List, Typography, Space } from 'antd';
+import { Form, Select, InputNumber, Button, Modal, List, Typography, Space, Collapse, Grid } from 'antd';
+import { CalendarOutlined } from '@ant-design/icons';
 import { Division } from '../types/calendar';
 import { formatDivisionName, getAvailableYears } from '../utils/calendarUtils';
+import { generateICSContent, downloadICS } from '../utils/icsUtils';
 
 const { Option } = Select;
 const { Text } = Typography;
+const { Panel } = Collapse;
+const { useBreakpoint } = Grid;
 
 interface LeaveControlsProps {
   selectedDivision: Division;
@@ -30,6 +34,8 @@ export const LeaveControls: React.FC<LeaveControlsProps> = ({
   selectedDays,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const screens = useBreakpoint();
+  const isMobile = !screens.sm;
   const divisions: Division[] = ['england-and-wales', 'scotland', 'northern-ireland'];
   const availableYears = getAvailableYears();
 
@@ -124,7 +130,12 @@ export const LeaveControls: React.FC<LeaveControlsProps> = ({
     );
   };
 
-  return (
+  const handleExportToCalendar = () => {
+    const icsContent = generateICSContent(selectedDays, selectedDivision, selectedYear);
+    downloadICS(icsContent, selectedYear);
+  };
+
+  const formContent = (
     <Form layout="vertical">
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <Form.Item label="Region">
@@ -175,10 +186,30 @@ export const LeaveControls: React.FC<LeaveControlsProps> = ({
           <Button onClick={onReset}>
             Reset Selected Days
           </Button>
+          <Button 
+            icon={<CalendarOutlined />} 
+            onClick={handleExportToCalendar}
+            disabled={selectedDays.length === 0}
+          >
+            Export to Calendar
+          </Button>
         </Space>
       </Space>
-
-      {renderModal()}
     </Form>
+  );
+
+  return (
+    <>
+      {isMobile ? (
+        <Collapse defaultActiveKey={['1']}>
+          <Panel header="Leave Controls" key="1">
+            {formContent}
+          </Panel>
+        </Collapse>
+      ) : (
+        formContent
+      )}
+      {renderModal()}
+    </>
   );
 }; 

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Typography, Space } from 'antd';
+import { Card, Typography, Space, Grid } from 'antd';
 import { CalendarMonth as CalendarMonthType } from '../types/calendar';
 
 const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 interface CalendarMonthProps {
   month: CalendarMonthType;
@@ -10,6 +11,9 @@ interface CalendarMonthProps {
 }
 
 export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick }) => {
+  const screens = useBreakpoint();
+  const isMobile = !screens.sm;
+
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -29,8 +33,8 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(7, 1fr)', 
-        gap: '4px',
-        height: '280px',
+        gap: isMobile ? '2px' : '4px',
+        height: isMobile ? '240px' : '280px',
         gridTemplateRows: 'auto repeat(6, 1fr)'
       }}>
         {dayNames.map(day => (
@@ -39,12 +43,13 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
             style={{
               textAlign: 'center',
               fontWeight: 'bold',
-              padding: '4px',
+              padding: isMobile ? '2px' : '4px',
               backgroundColor: '#f0f0f0',
               borderRadius: '4px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              fontSize: isMobile ? '12px' : '14px'
             }}
           >
             {day}
@@ -54,7 +59,7 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
           <div
             key={`padding-${index}`}
             style={{
-              padding: '4px',
+              padding: isMobile ? '2px' : '4px',
               backgroundColor: '#fafafa',
               borderRadius: '4px',
               display: 'flex',
@@ -68,7 +73,7 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
             key={index}
             onClick={() => !day.isBankHoliday && onDayClick(day.date)}
             style={{
-              padding: '4px',
+              padding: isMobile ? '2px' : '4px',
               textAlign: 'center',
               cursor: day.isBankHoliday ? 'not-allowed' : 'pointer',
               backgroundColor: day.isBankHoliday
@@ -81,7 +86,8 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
               transition: 'all 0.3s',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              fontSize: isMobile ? '12px' : '14px'
             }}
             onMouseEnter={(e) => {
               if (!day.isBankHoliday) {
