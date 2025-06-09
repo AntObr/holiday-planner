@@ -26,7 +26,13 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
       <Title level={4} style={{ textAlign: 'center', marginBottom: 16 }}>
         {monthNames[month.month]} {month.year}
       </Title>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(7, 1fr)', 
+        gap: '4px',
+        height: '280px',
+        gridTemplateRows: 'auto repeat(6, 1fr)'
+      }}>
         {dayNames.map(day => (
           <div
             key={day}
@@ -36,6 +42,9 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
               padding: '4px',
               backgroundColor: '#f0f0f0',
               borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             {day}
@@ -48,6 +57,9 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
               padding: '4px',
               backgroundColor: '#fafafa',
               borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           />
         ))}
@@ -67,6 +79,9 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
               color: day.isBankHoliday ? 'white' : 'inherit',
               borderRadius: '4px',
               transition: 'all 0.3s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
             onMouseEnter={(e) => {
               if (!day.isBankHoliday) {
@@ -80,10 +95,7 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
             }}
             title={day.bankHolidayTitle}
           >
-            <Space direction="vertical" size={0}>
-              <span>{day.date.getDate()}</span>
-              {day.isBankHoliday && <span style={{ fontSize: '12px' }}>*</span>}
-            </Space>
+            <span>{day.date.getDate()}</span>
           </div>
         ))}
       </div>
