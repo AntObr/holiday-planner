@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { Form, Select, InputNumber, Button, Modal, List, Typography, Space } from 'antd';
 import { Division } from '../types/calendar';
 import { formatDivisionName, getAvailableYears } from '../utils/calendarUtils';
+
+const { Option } = Select;
+const { Text } = Typography;
 
 interface LeaveControlsProps {
   selectedDivision: Division;
@@ -25,9 +29,9 @@ export const LeaveControls: React.FC<LeaveControlsProps> = ({
   onReset,
   selectedDays,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const divisions: Division[] = ['england-and-wales', 'scotland', 'northern-ireland'];
   const availableYears = getAvailableYears();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -87,97 +91,94 @@ export const LeaveControls: React.FC<LeaveControlsProps> = ({
   const renderModal = () => {
     const groupedDays = groupDaysByMonth();
     return (
-      <div className="modal">
-        <div className="modal-content">
-          <h2>Selected Leave for {selectedYear}</h2>
-          <ul>
-            {Object.entries(groupedDays).map(([month, days]) => (
-              <li key={month}>
-                <strong>{monthNames[parseInt(month)]}:</strong> {formatConsecutiveDays(days).join(', ')}
-              </li>
-            ))}
-          </ul>
-          <button onClick={() => setIsModalOpen(false)}>Close</button>
-        </div>
-      </div>
+      <Modal
+        title={`Selected Leave for ${selectedYear}`}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={[
+          <Button key="close" type="primary" onClick={() => setIsModalOpen(false)}>
+            Close
+          </Button>
+        ]}
+      >
+        <List
+          dataSource={Object.entries(groupedDays)}
+          renderItem={([month, days]) => (
+            <List.Item>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Text strong>{monthNames[parseInt(month)]}:</Text>
+                <List
+                  size="small"
+                  dataSource={formatConsecutiveDays(days)}
+                  renderItem={period => (
+                    <List.Item>
+                      <Text>• {period}</Text>
+                    </List.Item>
+                  )}
+                />
+              </Space>
+            </List.Item>
+          )}
+        />
+      </Modal>
     );
   };
 
   return (
-    <div className="grid-row">
-      <div className="grid-column-one-third">
-        <div className="form-group">
-          <label className="label" htmlFor="region">
-            Region
-          </label>
-          <select
-            className="select"
-            id="region"
+    <Form layout="vertical">
+      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+        <Form.Item label="Region">
+          <Select
             value={selectedDivision}
-            onChange={(e) => onDivisionChange(e.target.value as Division)}
+            onChange={onDivisionChange}
+            style={{ width: '100%' }}
           >
             {divisions.map((division) => (
-              <option key={division} value={division}>
+              <Option key={division} value={division}>
                 {formatDivisionName(division)}
-              </option>
+              </Option>
             ))}
-          </select>
-        </div>
-      </div>
+          </Select>
+        </Form.Item>
 
-      <div className="grid-column-one-third">
-        <div className="form-group">
-          <label className="label" htmlFor="year">
-            Year
-          </label>
-          <select
-            className="select"
-            id="year"
+        <Form.Item label="Year">
+          <Select
             value={selectedYear}
-            onChange={(e) => onYearChange(Number(e.target.value))}
+            onChange={onYearChange}
+            style={{ width: '100%' }}
           >
             {availableYears.map((year) => (
-              <option key={year} value={year}>
+              <Option key={year} value={year}>
                 {year}
-              </option>
+              </Option>
             ))}
-          </select>
-        </div>
-      </div>
+          </Select>
+        </Form.Item>
 
-      <div className="grid-column-one-third">
-        <div className="form-group">
-          <label className="label" htmlFor="available-leave">
-            Available Leave (days)
-          </label>
-          <input
-            className="input input--width-3"
-            id="available-leave"
-            type="number"
-            min="0"
-            max="365"
+        <Form.Item label="Available Leave Days">
+          <InputNumber
             value={availableLeave}
-            onChange={(e) => onAvailableLeaveChange(Number(e.target.value))}
+            onChange={(value) => value !== null && onAvailableLeaveChange(value)}
+            min={0}
+            style={{ width: '100%' }}
           />
-          <div className="hint">
-            Days used: {usedLeave} / {availableLeave}
-          </div>
-        </div>
-      </div>
+        </Form.Item>
 
-      <div className="form-group">
-        <button onClick={onReset} className="reset-button">
-          Reset Selected Days
-        </button>
-      </div>
+        <Form.Item label="Used Leave Days">
+          <Text>{usedLeave}</Text>
+        </Form.Item>
 
-      <div className="form-group">
-        <button onClick={() => setIsModalOpen(true)} className="view-leave-button">
-          View My Leave
-        </button>
-      </div>
+        <Space>
+          <Button type="primary" onClick={() => setIsModalOpen(true)}>
+            View My Leave
+          </Button>
+          <Button onClick={onReset}>
+            Reset Selected Days
+          </Button>
+        </Space>
+      </Space>
 
-      {isModalOpen && renderModal()}
-    </div>
+      {renderModal()}
+    </Form>
   );
 }; 

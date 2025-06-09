@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Layout, Typography, Row, Col, Card, Space } from 'antd';
 import { BankHolidaysService } from './services/bankHolidaysService';
 import { LeaveControls } from './components/LeaveControls';
 import { CalendarMonth } from './components/CalendarMonth';
 import { Division, CalendarMonth as CalendarMonthType, LeaveState } from './types/calendar';
 import { createCalendarMonth } from './utils/calendarUtils';
-import './styles/main.css';
-import './styles/calendar.css';
+import 'antd/dist/reset.css';
+
+const { Header, Content } = Layout;
+const { Title } = Typography;
 
 function App() {
   const [selectedDivision, setSelectedDivision] = useState<Division>(() => {
@@ -112,33 +115,40 @@ function App() {
   }, [leaveState]);
 
   return (
-    <div className="container">
-      <main className="main-wrapper">
-        <h1 className="heading-xl">Holiday Planner</h1>
-        
-        <LeaveControls
-          selectedDivision={selectedDivision}
-          selectedYear={selectedYear}
-          availableLeave={availableLeave}
-          usedLeave={leaveState.usedDays}
-          onDivisionChange={setSelectedDivision}
-          onYearChange={setSelectedYear}
-          onAvailableLeaveChange={setAvailableLeave}
-          onReset={handleReset}
-          selectedDays={leaveState.selectedDays}
-        />
-
-        <div className="grid-row">
-          {calendarMonths.map((month, index) => (
-            <CalendarMonth
-              key={index}
-              month={month}
-              onDayClick={handleDayClick}
-            />
-          ))}
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header style={{ background: '#fff', padding: '0 50px' }}>
+        <Title level={2} style={{ margin: '16px 0' }}>Holiday Planner</Title>
+      </Header>
+      <Content style={{ padding: '0 50px' }}>
+        <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Card>
+              <LeaveControls
+                selectedDivision={selectedDivision}
+                selectedYear={selectedYear}
+                availableLeave={availableLeave}
+                usedLeave={leaveState.usedDays}
+                onDivisionChange={setSelectedDivision}
+                onYearChange={setSelectedYear}
+                onAvailableLeaveChange={setAvailableLeave}
+                onReset={handleReset}
+                selectedDays={leaveState.selectedDays}
+              />
+            </Card>
+            <Row gutter={[16, 16]}>
+              {calendarMonths.map((month, index) => (
+                <Col xs={24} sm={12} md={8} lg={6} key={index}>
+                  <CalendarMonth
+                    month={month}
+                    onDayClick={handleDayClick}
+                  />
+                </Col>
+              ))}
+            </Row>
+          </Space>
         </div>
-      </main>
-    </div>
+      </Content>
+    </Layout>
   );
 }
 

@@ -1,5 +1,8 @@
 import React from 'react';
+import { Card, Typography, Space } from 'antd';
 import { CalendarMonth as CalendarMonthType } from '../types/calendar';
+
+const { Title } = Typography;
 
 interface CalendarMonthProps {
   month: CalendarMonthType;
@@ -19,38 +22,71 @@ export const CalendarMonth: React.FC<CalendarMonthProps> = ({ month, onDayClick 
   const paddingDays = Array(firstDay).fill(null);
 
   return (
-    <div className="grid-column-one-third">
-      <div className="calendar-month">
-        <h3 className="calendar-month-title">
-          {monthNames[month.month]} {month.year}
-        </h3>
-        <div className="calendar-grid">
-          {dayNames.map(day => (
-            <div key={day} className="calendar-day-header">
-              {day}
-            </div>
-          ))}
-          {paddingDays.map((_, index) => (
-            <div key={`padding-${index}`} className="calendar-day padding" />
-          ))}
-          {month.days.map((day, index) => (
-            <div
-              key={index}
-              className={`calendar-day ${
-                day.isBankHoliday ? 'bank-holiday' :
-                day.isSelected ? 'selected' : ''
-              }`}
-              onClick={() => !day.isBankHoliday && onDayClick(day.date)}
-              title={day.bankHolidayTitle}
-            >
-              <span className="day-number">{day.date.getDate()}</span>
-              {day.isBankHoliday && (
-                <span className="bank-holiday-indicator" title={day.bankHolidayTitle}>*</span>
-              )}
-            </div>
-          ))}
-        </div>
+    <Card>
+      <Title level={4} style={{ textAlign: 'center', marginBottom: 16 }}>
+        {monthNames[month.month]} {month.year}
+      </Title>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+        {dayNames.map(day => (
+          <div
+            key={day}
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              padding: '4px',
+              backgroundColor: '#f0f0f0',
+              borderRadius: '4px',
+            }}
+          >
+            {day}
+          </div>
+        ))}
+        {paddingDays.map((_, index) => (
+          <div
+            key={`padding-${index}`}
+            style={{
+              padding: '4px',
+              backgroundColor: '#fafafa',
+              borderRadius: '4px',
+            }}
+          />
+        ))}
+        {month.days.map((day, index) => (
+          <div
+            key={index}
+            onClick={() => !day.isBankHoliday && onDayClick(day.date)}
+            style={{
+              padding: '4px',
+              textAlign: 'center',
+              cursor: day.isBankHoliday ? 'not-allowed' : 'pointer',
+              backgroundColor: day.isBankHoliday
+                ? '#ff4d4f'
+                : day.isSelected
+                ? '#ffe066'
+                : 'white',
+              color: day.isBankHoliday ? 'white' : 'inherit',
+              borderRadius: '4px',
+              transition: 'all 0.3s',
+            }}
+            onMouseEnter={(e) => {
+              if (!day.isBankHoliday) {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            title={day.bankHolidayTitle}
+          >
+            <Space direction="vertical" size={0}>
+              <span>{day.date.getDate()}</span>
+              {day.isBankHoliday && <span style={{ fontSize: '12px' }}>*</span>}
+            </Space>
+          </div>
+        ))}
       </div>
-    </div>
+    </Card>
   );
 }; 
